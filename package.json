@@ -1,0 +1,39 @@
+{
+  "name": "d3-plot3d",
+  "version": "0.0.1",
+  "description": "d3 plugin for 3D visualizations",
+  "keywords": [
+    "d3",
+    "d3-module",
+    "d3-plot3d",
+    "3D",
+    "visualization"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "build/d3-plot3d.js",
+  "jsnext:main": "index",
+  "homepage": "https://github.com/vishaalagartha/d3-plot3d",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vishaalagartha/d3-plot3d.git"
+  },
+  "scripts": {
+    "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-plot3d.js -- index.js",
+    "test": "tape 'test/**/*-test.js'",
+    "prepublish": "npm run test && uglifyjs build/d3-plot3d.js -c -m -o build/d3-plot3d.min.js",
+    "postpublish": "zip -j build/d3-plot3d.zip -- LICENSE README.md build/d3-plot3d.js build/d3-plot3d.min.js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "rollup": "^1.10.1",
+    "rollup-plugin-babel-minify": "^8.0.0",
+    "tape": "4",
+    "uglify-es": "github:mishoo/UglifyJS2#harmony",
+    "uglify-js": "^3.5.6"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.4.3"
+  }
+}
