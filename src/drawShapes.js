@@ -11,10 +11,11 @@ const drawPoints = ({points, context, settings}) => {
                         .merge(pointsDataJoin)
                         .transition()
                         .duration(() => settings.dragging ? 0 : 1000)
-                        .attr('class', 'data')
+                        .attr('class', d => `data ${d.attributes.class}`)
                         .attr('cx', d => d.data[0].x)
                         .attr('cy', d => d.data[0].y)
-                        .attr('r', 3)
+                        .attr('r', d => d.attributes.radius ? d.attributes.radius : 3)
+                        .attr('fill', d => d.attributes.fill ? d.attributes.fill : 'black')
                         
   pointsDataJoin.exit().remove()
 }
@@ -30,7 +31,7 @@ const drawLines = ({lines, context, settings}) => {
                        .merge(linesDataJoin)
                        .transition()
                        .duration(() => settings.dragging ? 0 : 200)
-                       .attr('class', 'data')
+                       .attr('class', d => `data ${d.attributes.class}`)
                        .attr('x1', d => d.data[0].x)
                        .attr('y1', d => d.data[0].y)
                        .attr('x2', d => d.data[1].x)
@@ -52,7 +53,7 @@ const drawPolygons = ({polygons, context, settings}) => {
                        .merge(polygonsDataJoin)
                        .transition()
                        .duration(() => settings.dragging ? 0 : 200)
-                       .attr('class', 'data')
+                       .attr('class', d => `data ${d.attributes.class}`)
                        .attr('points', d => d.data.map(p => [p.x, p.y].join(','))) 
                        .attr('fill', d => d.attributes.fill ? d.attributes.fill : 'black')
                        .attr('opacity', d => d.attributes.opacity ? d.attributes.opacity : 0.8)
@@ -83,7 +84,7 @@ const drawCurves = ({curves, context, settings}) => {
   curvesDataJoin.enter().append('path')
                        .merge(curvesDataJoin)
                        .transition()
-                       .attr('class', 'data')
+                       .attr('class', d => `data ${d.attributes.class}`)
                        .duration(() => settings.dragging ? 0 : 200)
                        .attr('d', d => curveGenerator(d.data.map(p => [p.x, p.y])))
                        .attr('fill', 'none')
@@ -98,7 +99,7 @@ const drawSurfaces = ({surfaces, context, settings}) => {
   let polygons = []
   const colorSchemes = ['Blues', 'Greens', 'Greys', 'Oranges', 'Purples', 'Reds']
   surfaces.forEach((surface, i) => {
-    polygons.push({data: [], colorScheme: null})
+    polygons.push({data: []})
 
     let x = -settings.scale+settings.origin.x
     let minZ = Infinity
@@ -134,6 +135,8 @@ const drawSurfaces = ({surfaces, context, settings}) => {
 
     const colorScheme = d3.scaleSequential(d3[`interpolate${selectedScheme}`]).domain([maxZ, minZ])
     polygons[polygons.length-1].colorScheme = colorScheme
+    polygons[polygons.length-1].opacity = surface.attributes.opacity ? surface.attributes.opacity : null
+    polygons[polygons.length-1].class = surface.attributes.class ? surface.attributes.class : null
   })
 
     
@@ -144,10 +147,10 @@ const drawSurfaces = ({surfaces, context, settings}) => {
                          .merge(polygonsDataJoin)
                          .transition()
                          .duration(() => settings.dragging ? 0 : 200)
-                         .attr('class', `surface${i}`)
+                         .attr('class', d => `surface${i} ${surface.class}`)
                          .attr('points', d => d.points.map(p => [p.x, p.y].join(','))) 
                          .attr('fill', d => surface.colorScheme(d.avgZ))
-                         .attr('opacity', d => d.opacity ? d.opacity : 0.8)
+                         .attr('opacity', d => surface.opacity ? surface.opacity : 0.8)
     polygonsDataJoin.exit().remove()
 
   })
