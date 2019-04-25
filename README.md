@@ -4,7 +4,7 @@ d3-plot3d is a D3 plugin that allows users to plot 3D data, lines, polygons, cur
 
 ## Installing
 
-If you use NPM, `npm install d3-plot3d`. Otherwise, download the [latest release](https://github.com/d3/d3-plot3d/releases).
+If you use NPM, `npm install d3-plot3d`. Otherwise, download the [latest release](https://github.com/vishaalagartha/d3-plot3d/releases).
 
 ## API Reference
 
